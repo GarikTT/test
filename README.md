@@ -129,7 +129,7 @@ $template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
 	[root@web ~]# cat /etc/audisp/audisp-remote.conf
 #                                                                                                                                                                            
 # This file controls the configuration of the audit remote                                                                                                                   
- #   logging subsystem, audisp-remote.
+/#   logging subsystem, audisp-remote.
 #                                                                                                                                                                            
                                                                                                                                                                              
 remote_server = 192.168.56.15
