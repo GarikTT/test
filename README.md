@@ -67,14 +67,14 @@ module_hotfixes=true
 	Выхлоп команды systemctl status rsyslog мне больше понравился.
 8 Открываем через mc файл - /etc/rsyslog.conf. Исправляем нужные строки. Хотя, можно было раскомментировать
 	те, которые там были, но они немного отличаются.
-# provides UDP syslog reception
+/# provides UDP syslog reception
 module(load="imudp")
 input(type="imudp" port="514")
 # provides TCP syslog reception
 module(load="imtcp")
 input(type="imtcp" port="514")
 	В конец файла добавляем -
-#Add remote logs
+/#Add remote logs
 $template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
 *.* ?RemoteLogs
 & ~ // Это что за символы? В методичке правильно написано?! Хотя nginx -t не выдал никаких ошибок. Но, и без них все проходит нормально!
