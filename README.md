@@ -1,8 +1,8 @@
 Урок 24 - Сбор и анализ логов.  
 Цель занятия -  
-    понять зачем нужны логи и как их собирать;  
+$~~~~$понять зачем нужны логи и как их собирать;  
     освоить принципы логирование с помощью rsyslog;  
-	понять возможности logrotate для задач ротации логов;  
+$~~~~$	понять возможности logrotate для задач ротации логов;  
 	научиться работать с journald и auditd;  
 	узнать про adrtd и kdump.  
 Домашнее задание - Научится проектировать централизованный сбор логов. Рассмотреть особенности   
@@ -79,43 +79,43 @@ $template RemoteLogs,"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log"
 *.* ?RemoteLogs  
 & ~ // Это что за символы? В методичке правильно написано?! Хотя nginx -t не выдал никаких ошибок. Но, и без них все проходит нормально!  
 9 Перезапускаемся -   
-	systemctl restart rsyslog
-	systemctl status rsyslog
-10 Теперь проверяем открытые порты - 
-	ss -tuln
-	exit
-	exit
-11 Заходим, значит, в web сервер -
-	vagrant ssh web
-	sudo -i
-12 Проверяем версию nginx: 
-	rpm -qa | grep nginx
-13 Добавляем в файл /etc/nginx/nginx.conf, после строки - error_log /var/log/nginx/error.log;
-	error_log syslog:server=192.168.56.15:514,tag=nginx_error;
-	access_log syslog:server=192.168.56.15:514,tag=nginx_access,severity=info combined;
-	И, всё! Впадаем в состояние бессмысленого копипаста и переписывания директивы access_log в течении двух дней.
-	После совета с преподавателем и Интернетом понимаю, что она (в смысле - директива) применяется в контексте hhtp.
-	Нахожу его и прописываю там. Вот, теперь все отлично!
-14 Проверяем - 
-	nginx -t
-	systemctl restart nginx
-15 Специально делаем ашибку для web-страницы - 
-	rm /usr/share/nginx/html/img/header-background.png
-	rm /usr/share/nginx/html/img/centos-logo.png
-	Очищаем историю браузера и видим, что картинки как не бывало.
-15 Далее заходим на log-сервер и смотрим информацию об nginx:
-	cat /var/log/rsyslog/web/nginx_access.log
-	cat /var/log/rsyslog/web/nginx_error.log
-	Да, натворили мы с вами дел!!! А копии не судьба было сделать? Как теперь восстанавливать?
-16 Настройка аудита, контролирующего изменения конфигурации nginx.
-17 Заходим на web-сервер. Проверяем установленную версию пакета аудита -
-	rpm -qa | grep audit
-18 В конец файла /etc/audit/rules.d/audit.rules добавим следующие строки:
-	-w /etc/nginx/nginx.conf -р wa -k nginx_conf
-	-w /etc/nginx/default.d/ -p wa -k nginx_conf
-19 Перезапускаем службу auditd:
-	service auditd restart
-20 Сотрем какую нибудь лишнюю строчку в файле /etc/nginx/nginx.conf.
+	systemctl restart rsyslog  
+	systemctl status rsyslog  
+10 Теперь проверяем открытые порты -   
+	ss -tuln  
+	exit  
+	exit  
+11 Заходим, значит, в web сервер -  
+	vagrant ssh web  
+	sudo -i  
+12 Проверяем версию nginx:   
+	rpm -qa | grep nginx  
+13 Добавляем в файл /etc/nginx/nginx.conf, после строки - error_log /var/log/nginx/error.log;  
+	error_log syslog:server=192.168.56.15:514,tag=nginx_error;  
+	access_log syslog:server=192.168.56.15:514,tag=nginx_access,severity=info combined;  
+	И, всё! Впадаем в состояние бессмысленого копипаста и переписывания директивы access_log в течении двух дней.  
+	После совета с преподавателем и Интернетом понимаю, что она (в смысле - директива) применяется в контексте hhtp.  
+	Нахожу его и прописываю там. Вот, теперь все отлично!  
+14 Проверяем -   
+	nginx -t  
+	systemctl restart nginx  
+15 Специально делаем ашибку для web-страницы -   
+	rm /usr/share/nginx/html/img/header-background.png  
+	rm /usr/share/nginx/html/img/centos-logo.png  
+	Очищаем историю браузера и видим, что картинки как не бывало.  
+15 Далее заходим на log-сервер и смотрим информацию об nginx:  
+	cat /var/log/rsyslog/web/nginx_access.log  
+	cat /var/log/rsyslog/web/nginx_error.log  
+	Да, натворили мы с вами дел!!! А копии не судьба было сделать? Как теперь восстанавливать?  
+16 Настройка аудита, контролирующего изменения конфигурации nginx.  
+17 Заходим на web-сервер. Проверяем установленную версию пакета аудита -  
+	rpm -qa | grep audit  
+18 В конец файла /etc/audit/rules.d/audit.rules добавим следующие строки:  
+	-w /etc/nginx/nginx.conf -р wa -k nginx_conf  
+	-w /etc/nginx/default.d/ -p wa -k nginx_conf  
+19 Перезапускаем службу auditd:  
+	service auditd restart  
+20 Сотрем какую нибудь лишнюю строчку в файле /etc/nginx/nginx.conf.  
 21 Смотрим изменения - ausearch -f /etc/nginx/nginx.conf.
 22 Далее настроим пересылку логов на удаленный сервер.
 23 Установим пакет audispd-plugins:
